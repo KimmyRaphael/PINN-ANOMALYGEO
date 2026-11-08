@@ -1,0 +1,39 @@
+project_name: "PINN-Joint-Gravity-Magnetic"
+seed: 42
+
+domain:
+  x_min: -1000.0
+  x_max: 1000.0
+  y_min: -1000.0
+  y_max: 1000.0
+  z_min: 0.0
+  z_max: 1000.0
+
+model:
+  in_features: 3          # (x, y, z) normalized in [-1, 1]
+  out_features: 4         # (U, V_m, delta_rho, kappa)
+  hidden_layers: 6
+  hidden_units: 128
+  activation: "siren"     # Options: "siren", "tanh"
+  fourier_features: true
+  num_frequencies: 32
+  sigma: 1.0
+
+physics:
+  G: 6.67430e-11          # Gravitational constant (m^3 kg^-1 s^-2)
+  B0_intensity: 45000.0   # Ambient geomagnetic field (nT)
+  inclination: -30.0      # Degrees (e.g., Indonesia region)
+  declination: 1.5        # Degrees
+
+training:
+  epochs: 5000
+  lr: 1.0e-3
+  n_collocation: 8000
+  n_surface: 1600
+  weights:
+    w_data_grav: 10.0
+    w_data_mag: 10.0
+    w_pde_grav: 1.0
+    w_pde_mag: 1.0
+    w_joint: 5.0
+    w_bc: 1.0
